@@ -1,0 +1,98 @@
+{
+  "project_name": "iphysys",
+  "domain": "Deep Tech / Distributed Systems / AI",
+  "theme_and_archetype": {
+    "theme": "Dark",
+    "archetype": "Archetype 4 (Swiss & High-Contrast) - Tactical Dark Variant",
+    "description": "Serious, visionary, engineering-first. Emulates a mission control console and systems engineering diagram. High-trust, objective, data-dense without military/patriotic cliches."
+  },
+  "colors": {
+    "background_primary": "#050505",
+    "surface_card": "#0f0f11",
+    "surface_elevated": "#1a1a1c",
+    "border_muted": "#27272a",
+    "border_active": "#3f3f46",
+    "text_primary": "#f8fafc",
+    "text_secondary": "#94a3b8",
+    "text_muted": "#52525b",
+    "accent_primary": "#3b82f6",
+    "accent_status_amber": "#f59e0b",
+    "accent_status_green": "#10b981",
+    "accent_status_red": "#ef4444",
+    "forbidden_colors": ["#9D4CDD", "#1B93A4", "purple", "violet", "teal", "camouflage greens"]
+  },
+  "typography": {
+    "font_heading": "IBM Plex Sans",
+    "font_body": "Inter",
+    "font_mono": "JetBrains Mono",
+    "scale": {
+      "h1": "text-5xl md:text-6xl tracking-tighter leading-none font-medium",
+      "h2": "text-3xl md:text-4xl tracking-tight leading-tight font-medium",
+      "h3": "text-xl md:text-2xl tracking-tight font-medium",
+      "body": "text-base leading-relaxed text-secondary",
+      "small_mono": "text-xs font-mono tracking-[0.2em] uppercase",
+      "badges": "text-xs font-mono tracking-widest uppercase"
+    },
+    "rules": [
+      "Never center headings globally; strictly left-align for a systematic, technical feel.",
+      "Use mono-spaced fonts for metrics, statuses, navigation overlines, and labels.",
+      "Do not use ultra-bold or black weights for headings; stick to Medium or SemiBold to retain engineering precision."
+    ]
+  },
+  "layout_and_spacing": {
+    "container_padding": "px-6 md:px-12 lg:px-24",
+    "section_spacing": "py-24 md:py-32",
+    "grid_system": "Mode B: The 'Control Room' Grid - sharp, dense, utilized space. Gap-4 to Gap-6.",
+    "borders": "1px solid #27272a. Grid borders exposed. Technical skeleton look.",
+    "radii": "rounded-none or rounded-sm. Deep tech UI must remain sharp and structural.",
+    "shadows": "Minimal. Avoid soft blurs. Use solid offsets or pure 1px glow on active state."
+  },
+  "component_patterns": {
+    "hero": {
+      "layout": "Left-aligned content block (max-w-2xl) taking up 60% of the screen. Absolute positioned canvas animation in the background.",
+      "background_animation": "Use react-tsparticles or raw HTML5 canvas to draw a 'distributed node and edge topology network'. Thin, low-opacity white/blue lines connecting dots (agents) that slowly drift and reconnect. Do NOT use stock video."
+    },
+    "capability_cards": {
+      "layout": "Bento-style or strict CSS grid. Surface: #0f0f11. Border: 1px solid #27272a.",
+      "status_badge": "Top right corner. Text: 'RESEARCH & PROTOTYPING'. Font: font-mono text-[10px]. Color: text-amber-500 bg-amber-500/10 border border-amber-500/20 px-2 py-1.",
+      "interaction": "Hover: border-active, subtle -translate-y-[2px], transition 0.2s linear."
+    },
+    "principles_grid": {
+      "layout": "Dense 2x3 or 3x2 grid. border-collapse behavior (shared borders). Minimal padding (p-6 or p-8) inside each cell. Each principle numbered (e.g., '01', '02') in font-mono."
+    },
+    "roadmap": {
+      "layout": "Vertical timeline mimicking a system topology graph. Nodes on the left edge with lines connecting phases downward. Phase numbers in monospace.",
+      "visuals": "Use SVG lines bridging content blocks."
+    },
+    "blog_cards": {
+      "layout": "Flat card, no image or minimal abstract CSS geometry. Focus on title, abstract, and heavily visible tags/categories.",
+      "meta": "Date and Author in font-mono."
+    },
+    "admin_dashboard": {
+      "layout": "Sidebar navigation. Dense data tables (Shadcn UI). Flat surface backgrounds. Use standard Shadcn components heavily customized to be sharp (rounded-sm) and stark.",
+      "tables": "Mono-spaced IDs and dates. Clear status dots."
+    },
+    "navigation_header": {
+      "layout": "Sticky, glassmorphism (bg-black/80 backdrop-blur-md), bottom border (border-b border-white/10). Explicit navigation links on desktop."
+    }
+  },
+  "motion_and_interactions": {
+    "philosophy": "Subtle, performant, linear. Deep tech does not bounce.",
+    "hover_states": "Color shifts (border brightening), slight opacity changes. Use text-white for hover on text-secondary.",
+    "transitions": "Fast (150ms - 200ms). ease-out.",
+    "page_load": "Simple opacity fade-in for structural elements. Staggered reveal for grid items."
+  },
+  "media_and_assets": {
+    "icons": "lucide-react (stroke-width 1.5 for a technical/precise look).",
+    "imagery_rules": "Strictly NO drone stock footage, NO military camo, NO weapons. Use abstract geometric generations, data topology, dark server racks, or code snippets for visual filler.",
+    "logo": "Text-based logotype using font-mono or a stark sans-serif. e.g. '[ iphysys ]' or 'iphysys //'"
+  },
+  "instructions_to_main_agent": [
+    "Install 'lucide-react', 'react-router-dom', 'framer-motion'.",
+    "Implement the hero background using TSParticles (react-tsparticles) configured for a slow-moving node/edge network (links between particles).",
+    "All interactive elements MUST have 'data-testid' attributes (e.g., data-testid='hero-cta-button').",
+    "Configure Tailwind CSS to use the specific color tokens listed here.",
+    "Use Shadcn UI for forms, tables, and dialogs but strip out the default radii (override to rounded-sm) and box-shadows to fit the brutalist/technical theme.",
+    "Ensure dark mode is the default and only mode (force dark scheme)."
+  ]
+}
