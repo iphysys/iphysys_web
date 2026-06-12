@@ -19,6 +19,12 @@ export default function NodeNetworkBackground({
     let height = canvas.offsetHeight;
     const dpr = Math.min(window.devicePixelRatio || 1, 2);
 
+    // Mobile gets half the glow budget (rounded).
+    const isMobile = typeof window !== "undefined" && window.innerWidth < 768;
+    const goldCount = isMobile ? Math.round(gold / 2) : gold;
+    const redCount = isMobile ? Math.round(red / 2) : red;
+    const whiteCount = isMobile ? Math.round(white / 2) : white;
+
     const resize = () => {
       width = canvas.offsetWidth;
       height = canvas.offsetHeight;
@@ -40,9 +46,9 @@ export default function NodeNetworkBackground({
     });
 
     const nodes = [
-      ...Array.from({ length: gold }, () => makeNode("gold")),
-      ...Array.from({ length: red }, () => makeNode("red")),
-      ...Array.from({ length: white }, () => makeNode("white")),
+      ...Array.from({ length: goldCount }, () => makeNode("gold")),
+      ...Array.from({ length: redCount }, () => makeNode("red")),
+      ...Array.from({ length: whiteCount }, () => makeNode("white")),
     ];
 
     const colorFor = (kind, alpha) => {

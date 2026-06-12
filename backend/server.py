@@ -117,6 +117,12 @@ class LoginIn(BaseModel):
     password: str
 
 
+class SignupIn(BaseModel):
+    email: EmailStr
+    password: str = Field(min_length=6, max_length=200)
+    name: Optional[str] = ""
+
+
 class NewsletterIn(BaseModel):
     email: EmailStr
 
@@ -272,6 +278,33 @@ async def login(payload: LoginIn, response: Response):
         "email": user["email"],
         "name": user.get("name", ""),
         "role": user.get("role", "admin"),
+        "access_token": access,
+    }
+
+
+@api_router.post("/auth/signup")
+async def signup(payload: SignupIn, response: Response):
+    email = payload.email.lower()
+    existing = await db.users.find_one({"email": email})
+    if existing:
+        raise HTTPException(status_code=409, detail="An account with this email already exists")
+    user_doc = {
+        "id": str(uuid.uuid4()),
+        "email": email,
+        "password_hash": hash_password(payload.password),
+        "name": (payload.name or "").strip(),
+        "role": "user",
+        "created_at": iso_now(),
+    }
+    await db.users.insert_one(user_doc)
+    access = create_access_token(user_doc["id"], user_doc["email"])
+    refresh = create_refresh_token(user_doc["id"])
+    set_auth_cookies(response, access, refresh)
+    return {
+        "id": user_doc["id"],
+        "email": user_doc["email"],
+        "name": user_doc["name"],
+        "role": user_doc["role"],
         "access_token": access,
     }
 

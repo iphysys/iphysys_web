@@ -12,6 +12,8 @@ import AboutPage from "@/pages/AboutPage";
 import ContactPage from "@/pages/ContactPage";
 import LegalPage from "@/pages/LegalPage";
 import AITextbookPage from "@/pages/AITextbookPage";
+import SignInPage from "@/pages/SignInPage";
+import SignUpPage from "@/pages/SignUpPage";
 import AdminLoginPage from "@/pages/AdminLoginPage";
 import AdminDashboardPage from "@/pages/AdminDashboardPage";
 import NotFoundPage from "@/pages/NotFoundPage";
@@ -31,6 +33,8 @@ function App() {
             <Route path="/about" element={<Layout><AboutPage /></Layout>} />
             <Route path="/contact" element={<Layout><ContactPage /></Layout>} />
             <Route path="/legal/:slug" element={<Layout><LegalPage /></Layout>} />
+            <Route path="/signin" element={<Layout><SignInPage /></Layout>} />
+            <Route path="/signup" element={<Layout><SignUpPage /></Layout>} />
             <Route path="/admin/login" element={<Layout><AdminLoginPage /></Layout>} />
             <Route path="/admin" element={<AdminDashboardPage />} />
             <Route path="*" element={<Layout><NotFoundPage /></Layout>} />

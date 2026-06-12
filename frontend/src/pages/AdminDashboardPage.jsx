@@ -43,8 +43,12 @@ export default function AdminDashboardPage() {
       <div className="border-b border-white/10">
         <div className="mx-auto flex max-w-7xl items-center justify-between px-6 py-5 lg:px-12">
           <div className="flex items-center gap-6">
-            <p className="font-mono text-sm tracking-widest text-white">
-              <span className="text-[#d4af37]">[</span> iphysys <span className="text-[#d4af37]">/</span> admin <span className="text-[#d4af37]">]</span>
+            <p className="font-mono text-sm tracking-widest">
+              <span className="text-[#d4af37]">[</span>{" "}
+              <span className="text-[#dc2626]">i</span>
+              <span className="text-white">physys</span>{" "}
+              <span className="text-[#d4af37]">/</span> admin{" "}
+              <span className="text-[#d4af37]">]</span>
             </p>
             <p className="hidden font-mono text-xs uppercase tracking-widest text-slate-500 md:block">
               {user.email}
