@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import { ArrowRight, Cpu, Network, Sparkles, ShieldCheck, Workflow, Gauge, Eye, Brain, Compass, Wrench } from "lucide-react";
 import NodeNetworkBackground from "@/components/NodeNetworkBackground";
+import ApplicationDomains from "@/components/ApplicationDomains";
 import { api } from "@/lib/api";
 
 const CAPABILITIES = [
@@ -158,6 +159,9 @@ export default function HomePage() {
           </div>
         </div>
       </section>
+
+      {/* APPLICATION DOMAINS */}
+      <ApplicationDomains />
 
       {/* PRINCIPLES */}
       <section className="border-b border-white/10" data-testid="section-principles">
