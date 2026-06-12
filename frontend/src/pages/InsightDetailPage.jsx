@@ -27,7 +27,7 @@ export default function InsightDetailPage() {
       <div className="mx-auto max-w-3xl px-6 py-32 text-center" data-testid="insight-not-found">
         <p className="font-mono text-xs uppercase tracking-widest text-slate-500">404</p>
         <h1 className="font-display mt-4 text-3xl text-white">Insight not found.</h1>
-        <Link to="/insights" className="mt-8 inline-block font-mono text-xs uppercase tracking-[0.2em] text-blue-400">
+        <Link to="/insights" className="mt-8 inline-block font-mono text-xs uppercase tracking-[0.2em] text-[#d4af37]">
           ← Back to Insights
         </Link>
       </div>
@@ -49,7 +49,7 @@ export default function InsightDetailPage() {
           <Link to="/insights" className="inline-flex items-center gap-2 font-mono text-xs uppercase tracking-[0.2em] text-slate-400 hover:text-white">
             <ArrowLeft size={12} strokeWidth={1.5} /> All Insights
           </Link>
-          <p className="mt-8 font-mono text-xs uppercase tracking-widest text-blue-400">{post.category}</p>
+          <p className="mt-8 font-mono text-xs uppercase tracking-widest text-[#d4af37]">{post.category}</p>
           <h1 className="font-display mt-4 text-3xl font-medium leading-tight text-white md:text-4xl lg:text-5xl">
             {post.title}
           </h1>
@@ -90,11 +90,11 @@ export default function InsightDetailPage() {
                 <Link
                   key={r.slug}
                   to={`/insights/${r.slug}`}
-                  className="group bg-[#0a0a0c] p-8 hover:bg-[#101013]"
+                  className="group bg-[#120d0a] p-8 hover:bg-[#1a120e]"
                   data-testid={`related-${r.slug}`}
                 >
-                  <p className="font-mono text-[10px] uppercase tracking-widest text-blue-400">{r.category}</p>
-                  <h3 className="mt-3 font-display text-lg font-medium text-white group-hover:text-blue-200">
+                  <p className="font-mono text-[10px] uppercase tracking-widest text-[#d4af37]">{r.category}</p>
+                  <h3 className="mt-3 font-display text-lg font-medium text-white group-hover:text-[#f4c95d]">
                     {r.title}
                   </h3>
                   <p className="mt-3 line-clamp-3 text-sm text-slate-400">{r.excerpt}</p>

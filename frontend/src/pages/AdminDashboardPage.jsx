@@ -39,12 +39,12 @@ export default function AdminDashboardPage() {
   };
 
   return (
-    <div className="min-h-screen bg-[#050505]" data-testid="admin-dashboard">
+    <div className="min-h-screen bg-[#0a0706]" data-testid="admin-dashboard">
       <div className="border-b border-white/10">
         <div className="mx-auto flex max-w-7xl items-center justify-between px-6 py-5 lg:px-12">
           <div className="flex items-center gap-6">
             <p className="font-mono text-sm tracking-widest text-white">
-              <span className="text-slate-500">[</span> iphysys <span className="text-slate-500">/</span> admin <span className="text-slate-500">]</span>
+              <span className="text-[#d4af37]">[</span> iphysys <span className="text-[#d4af37]">/</span> admin <span className="text-[#d4af37]">]</span>
             </p>
             <p className="hidden font-mono text-xs uppercase tracking-widest text-slate-500 md:block">
               {user.email}
@@ -103,7 +103,7 @@ function OverviewTab() {
   return (
     <div className="grid gap-px border border-white/10 bg-white/10 md:grid-cols-3 lg:grid-cols-5" data-testid="stats-grid">
       {items.map((i) => (
-        <div key={i.label} className="bg-[#0a0a0c] p-8">
+        <div key={i.label} className="bg-[#120d0a] p-8">
           <p className="font-mono text-xs uppercase tracking-widest text-slate-500">{i.label}</p>
           <p className="font-display mt-4 text-4xl text-white">{i.value}</p>
         </div>
@@ -167,7 +167,7 @@ function PostsTab() {
         <p className="font-mono text-xs text-slate-500">Loading…</p>
       ) : (
         <div className="border border-white/10">
-          <div className="grid grid-cols-12 gap-4 border-b border-white/10 bg-[#0a0a0c] px-4 py-2 font-mono text-[10px] uppercase tracking-widest text-slate-500">
+          <div className="grid grid-cols-12 gap-4 border-b border-white/10 bg-[#120d0a] px-4 py-2 font-mono text-[10px] uppercase tracking-widest text-slate-500">
             <div className="col-span-5">Title</div>
             <div className="col-span-3">Category</div>
             <div className="col-span-2">Status</div>
@@ -232,7 +232,7 @@ function PostEditor({ initial, onClose, onSave }) {
       <form
         onSubmit={submit}
         onClick={(e) => e.stopPropagation()}
-        className="my-12 w-full max-w-3xl border border-white/15 bg-[#0a0a0c] p-8"
+        className="my-12 w-full max-w-3xl border border-white/15 bg-[#120d0a] p-8"
         data-testid="admin-post-editor"
       >
         <div className="mb-6 flex items-center justify-between">
@@ -249,7 +249,7 @@ function PostEditor({ initial, onClose, onSave }) {
               <label className="text-mono-label">Category</label>
               <select value={form.category} onChange={update("category")} className="mt-2 w-full border border-white/15 bg-transparent p-2 text-sm text-white" data-testid="post-category">
                 {CATEGORIES.map((c) => (
-                  <option key={c} value={c} className="bg-[#0a0a0c]">{c}</option>
+                  <option key={c} value={c} className="bg-[#120d0a]">{c}</option>
                 ))}
               </select>
             </div>
@@ -382,7 +382,7 @@ function ContactsTab() {
       ) : (
         <div className="space-y-4">
           {items.map((c) => (
-            <div key={c.id} className={`border border-white/10 bg-[#0a0a0c] p-6 ${c.read ? "opacity-70" : ""}`} data-testid={`contact-${c.id}`}>
+            <div key={c.id} className={`border border-white/10 bg-[#120d0a] p-6 ${c.read ? "opacity-70" : ""}`} data-testid={`contact-${c.id}`}>
               <div className="flex flex-wrap items-start justify-between gap-3">
                 <div>
                   <p className="font-display text-base text-white">{c.name} <span className="text-slate-500">·</span> <span className="font-mono text-xs text-slate-400">{c.email}</span></p>

@@ -10,8 +10,8 @@
 
 html,
 body {
-    background-color: #050505;
-    color: #f8fafc;
+    background-color: #0a0706;
+    color: #f5ece1;
     margin: 0;
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
@@ -20,25 +20,26 @@ body {
 
 @layer base {
     :root {
-        --background: 0 0% 2%;
-        --foreground: 210 40% 98%;
-        --card: 240 4% 6%;
-        --card-foreground: 210 40% 98%;
-        --popover: 240 4% 6%;
-        --popover-foreground: 210 40% 98%;
-        --primary: 210 40% 98%;
-        --primary-foreground: 240 5% 9%;
-        --secondary: 240 4% 10%;
-        --secondary-foreground: 210 40% 98%;
-        --muted: 240 4% 10%;
-        --muted-foreground: 215 16% 60%;
-        --accent: 217 91% 60%;
-        --accent-foreground: 210 40% 98%;
-        --destructive: 0 84% 60%;
-        --destructive-foreground: 210 40% 98%;
-        --border: 240 4% 15%;
-        --input: 240 4% 15%;
-        --ring: 217 91% 60%;
+        /* Warm blackish-gray base */
+        --background: 18 25% 4%;
+        --foreground: 36 40% 92%;
+        --card: 18 18% 7%;
+        --card-foreground: 36 40% 92%;
+        --popover: 18 18% 7%;
+        --popover-foreground: 36 40% 92%;
+        --primary: 0 73% 41%; /* blood red */
+        --primary-foreground: 36 40% 96%;
+        --secondary: 42 65% 52%; /* gold */
+        --secondary-foreground: 18 25% 4%;
+        --muted: 24 12% 12%;
+        --muted-foreground: 35 18% 65%;
+        --accent: 42 65% 52%; /* gold */
+        --accent-foreground: 18 25% 4%;
+        --destructive: 0 73% 41%;
+        --destructive-foreground: 36 40% 96%;
+        --border: 24 22% 14%;
+        --input: 24 22% 14%;
+        --ring: 42 65% 52%;
         --radius: 0.125rem;
     }
 }
@@ -50,6 +51,10 @@ body {
     body {
         @apply bg-background text-foreground;
         font-family: "Inter", sans-serif;
+        background-image:
+            radial-gradient(ellipse 1200px 600px at 85% -10%, rgba(217, 119, 6, 0.06), transparent 60%),
+            radial-gradient(ellipse 900px 500px at -10% 110%, rgba(185, 28, 28, 0.05), transparent 60%);
+        background-attachment: fixed;
     }
 }
 
@@ -67,19 +72,19 @@ body {
     font-size: 11px;
     letter-spacing: 0.2em;
     text-transform: uppercase;
-    color: #94a3b8;
+    color: #d4af37;
 }
 
 .grid-lines {
     background-image:
-        linear-gradient(rgba(255, 255, 255, 0.04) 1px, transparent 1px),
-        linear-gradient(90deg, rgba(255, 255, 255, 0.04) 1px, transparent 1px);
+        linear-gradient(rgba(212, 175, 55, 0.05) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(212, 175, 55, 0.05) 1px, transparent 1px);
     background-size: 64px 64px;
 }
 
 ::selection {
-    background: rgba(59, 130, 246, 0.3);
-    color: #f8fafc;
+    background: rgba(185, 28, 28, 0.45);
+    color: #fff5e1;
 }
 
 .fade-in {
@@ -98,7 +103,7 @@ body {
 }
 
 .hover-border:hover {
-    border-color: #3f3f46;
+    border-color: #d4af37;
 }
 
 button,
@@ -107,12 +112,13 @@ a {
         color 150ms ease-out,
         background-color 150ms ease-out,
         border-color 150ms ease-out,
-        opacity 150ms ease-out;
+        opacity 150ms ease-out,
+        box-shadow 200ms ease-out;
 }
 
 .prose-iphysys {
     font-family: "Inter", sans-serif;
-    color: #cbd5e1;
+    color: #cbb9a5;
     line-height: 1.75;
 }
 .prose-iphysys p {
@@ -121,10 +127,22 @@ a {
 .prose-iphysys h2,
 .prose-iphysys h3 {
     font-family: "IBM Plex Sans", sans-serif;
-    color: #f8fafc;
+    color: #f4e6c8;
     letter-spacing: -0.01em;
     margin: 2rem 0 1rem;
     font-weight: 500;
+}
+
+/* Glow utility for primary CTAs */
+.glow-red {
+    box-shadow:
+        0 0 0 1px rgba(185, 28, 28, 0.4),
+        0 0 24px -4px rgba(185, 28, 28, 0.35);
+}
+.glow-gold {
+    box-shadow:
+        0 0 0 1px rgba(212, 175, 55, 0.35),
+        0 0 24px -6px rgba(212, 175, 55, 0.3);
 }
 
 @layer base {

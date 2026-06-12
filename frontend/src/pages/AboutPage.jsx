@@ -62,7 +62,7 @@ export default function AboutPage() {
               ["Operator-aware", "Humans remain in the loop with intent and override."],
               ["Engineering rigor", "Verification, observability, and operational reality from day one."],
             ].map(([t, d]) => (
-              <div key={t} className="bg-[#0a0a0c] p-8">
+              <div key={t} className="bg-[#120d0a] p-8">
                 <h3 className="font-display text-lg font-medium text-white">{t}</h3>
                 <p className="mt-3 text-sm text-slate-400">{d}</p>
               </div>
@@ -85,7 +85,7 @@ export default function AboutPage() {
               "Digital Engineering",
               "Mission Systems",
             ].map((f) => (
-              <div key={f} className="bg-[#0a0a0c] p-6">
+              <div key={f} className="bg-[#120d0a] p-6">
                 <p className="font-mono text-xs text-slate-500">[ field ]</p>
                 <p className="mt-2 font-display text-base text-white">{f}</p>
               </div>
@@ -98,12 +98,12 @@ export default function AboutPage() {
         <div className="mx-auto grid max-w-7xl gap-12 px-6 py-24 md:grid-cols-12 lg:px-12">
           <div className="md:col-span-4">
             <p className="text-mono-label">05 / Founder Note</p>
-            <div className="mt-6 flex h-40 w-40 items-center justify-center border border-white/10 bg-[#0a0a0c]" data-testid="founder-photo-placeholder">
+            <div className="mt-6 flex h-40 w-40 items-center justify-center border border-white/10 bg-[#120d0a]" data-testid="founder-photo-placeholder">
               <User size={28} strokeWidth={1.5} className="text-slate-600" />
             </div>
           </div>
           <div className="md:col-span-7 md:col-start-6">
-            <blockquote className="border-l-2 border-blue-500 pl-6 text-xl leading-relaxed text-slate-200">
+            <blockquote className="border-l-2 border-[#b91c1c] pl-6 text-xl leading-relaxed text-slate-200">
               We are early in our journey. Our work today focuses on exploration, research,
               and prototype development. We believe thoughtful engineering and technical
               rigor are essential for building trustworthy intelligent systems.

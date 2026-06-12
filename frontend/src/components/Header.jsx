@@ -14,7 +14,7 @@ export default function Header() {
   const [open, setOpen] = useState(false);
   return (
     <header
-      className="sticky top-0 z-50 border-b border-white/10 bg-black/70 backdrop-blur-md"
+      className="sticky top-0 z-50 border-b border-[#3a2a20] bg-[#0a0706]/85 backdrop-blur-md"
       data-testid="site-header"
     >
       <div className="mx-auto flex max-w-7xl items-center justify-between px-6 py-4 lg:px-12">
@@ -24,7 +24,7 @@ export default function Header() {
           data-testid="brand-link"
           onClick={() => setOpen(false)}
         >
-          <span className="text-slate-500">[</span> iphysys <span className="text-slate-500">]</span>
+          <span className="text-[#d4af37]">[</span> iphysys <span className="text-[#d4af37]">]</span>
         </Link>
 
         <nav className="hidden items-center gap-8 md:flex" data-testid="primary-nav">

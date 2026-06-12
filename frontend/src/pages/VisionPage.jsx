@@ -57,7 +57,7 @@ export default function VisionPage() {
       <section className="border-b border-white/10">
         <div className="mx-auto max-w-7xl px-6 py-24 lg:px-12 lg:py-32">
           <p className="text-mono-label">02 / Our Thesis</p>
-          <blockquote className="mt-6 max-w-4xl border-l-2 border-blue-500 pl-6 text-2xl leading-snug text-white md:text-3xl">
+          <blockquote className="mt-6 max-w-4xl border-l-2 border-[#b91c1c] pl-6 text-2xl leading-snug text-white md:text-3xl">
             The next generation of physical systems will not be defined solely by hardware
             excellence, but by the intelligence that enables them to perceive, reason,
             coordinate, and adapt.
@@ -98,7 +98,7 @@ export default function VisionPage() {
               </div>
             </div>
             <div className="md:col-span-5">
-              <div className="sticky top-24 border border-white/10 bg-[#0a0a0c] p-6">
+              <div className="sticky top-24 border border-white/10 bg-[#120d0a] p-6">
                 <p className="text-mono-label">Reading the stack</p>
                 <p className="mt-4 text-sm leading-relaxed text-slate-400">
                   Each layer is engineered as a first-class concern — not an afterthought.
@@ -130,7 +130,7 @@ export default function VisionPage() {
               { title: "Critical Infrastructure", desc: "Resilient sensing and decision support for civil systems." },
               { title: "Mission-Critical Environments", desc: "Defence among many domains where engineering rigor is non-negotiable." },
             ].map((b) => (
-              <div key={b.title} className="bg-[#0a0a0c] p-8">
+              <div key={b.title} className="bg-[#120d0a] p-8">
                 <h3 className="font-display text-lg font-medium text-white">{b.title}</h3>
                 <p className="mt-3 text-sm text-slate-400">{b.desc}</p>
               </div>

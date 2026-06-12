@@ -59,7 +59,7 @@ export default function ContactPage() {
               <p className="text-mono-label">Direct</p>
               <a
                 href="mailto:hello@iphysys.com"
-                className="mt-2 block font-display text-xl text-white hover:text-blue-200"
+                className="mt-2 block font-display text-xl text-white hover:text-[#f4c95d]"
                 data-testid="direct-email"
               >
                 hello@iphysys.com
@@ -83,7 +83,7 @@ export default function ContactPage() {
               <Field label="Name" required value={form.name} onChange={onChange("name")} testid="contact-name" />
               <Field label="Organization" value={form.organization} onChange={onChange("organization")} testid="contact-org" />
               <Field label="Email" required type="email" value={form.email} onChange={onChange("email")} testid="contact-email" />
-              <div className="bg-[#0a0a0c] p-6">
+              <div className="bg-[#120d0a] p-6">
                 <label className="text-mono-label">Interest Type</label>
                 <select
                   value={form.interest_type}
@@ -92,11 +92,11 @@ export default function ContactPage() {
                   data-testid="contact-interest"
                 >
                   {INTERESTS.map((i) => (
-                    <option key={i} value={i} className="bg-[#0a0a0c]">{i}</option>
+                    <option key={i} value={i} className="bg-[#120d0a]">{i}</option>
                   ))}
                 </select>
               </div>
-              <div className="bg-[#0a0a0c] p-6 md:col-span-2">
+              <div className="bg-[#120d0a] p-6 md:col-span-2">
                 <label className="text-mono-label">Message</label>
                 <textarea
                   required
@@ -131,7 +131,7 @@ export default function ContactPage() {
 
 function Field({ label, required, type = "text", value, onChange, testid }) {
   return (
-    <div className="bg-[#0a0a0c] p-6">
+    <div className="bg-[#120d0a] p-6">
       <label className="text-mono-label">{label}{required && " *"}</label>
       <input
         type={type}

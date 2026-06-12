@@ -28,11 +28,11 @@ export default function Footer() {
   };
 
   return (
-    <footer className="border-t border-white/10 bg-[#050505]" data-testid="site-footer">
+    <footer className="border-t border-white/10 bg-[#0a0706]" data-testid="site-footer">
       <div className="mx-auto grid max-w-7xl gap-12 px-6 py-16 md:grid-cols-4 lg:px-12">
         <div className="md:col-span-2">
           <Link to="/" className="font-mono text-sm tracking-widest text-white" data-testid="footer-brand">
-            <span className="text-slate-500">[</span> iphysys <span className="text-slate-500">]</span>
+            <span className="text-[#d4af37]">[</span> iphysys <span className="text-[#d4af37]">]</span>
           </Link>
           <p className="mt-4 max-w-md text-sm leading-relaxed text-slate-400">
             Intelligence Layer for Physical Systems. Building the software intelligence stack

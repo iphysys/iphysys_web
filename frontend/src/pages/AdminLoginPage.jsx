@@ -26,7 +26,7 @@ export default function AdminLoginPage() {
 
   return (
     <div className="flex min-h-[80vh] items-center justify-center px-6 py-20" data-testid="admin-login-page">
-      <form onSubmit={submit} className="w-full max-w-md border border-white/10 bg-[#0a0a0c] p-10">
+      <form onSubmit={submit} className="w-full max-w-md border border-white/10 bg-[#120d0a] p-10">
         <p className="text-mono-label">// Admin Console</p>
         <h1 className="font-display mt-4 text-2xl text-white">Sign in</h1>
         <p className="mt-2 text-sm text-slate-400">Authorized personnel only.</p>

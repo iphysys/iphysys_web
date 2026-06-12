@@ -66,7 +66,7 @@ export default function InsightsPage() {
       <section className="border-b border-white/10">
         <div className="mx-auto max-w-7xl px-6 py-10 lg:px-12">
           <div className="flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
-            <div className="flex items-center gap-3 border border-white/10 bg-[#0a0a0c] px-3 py-2 md:w-96">
+            <div className="flex items-center gap-3 border border-white/10 bg-[#120d0a] px-3 py-2 md:w-96">
               <Search size={14} strokeWidth={1.5} className="text-slate-500" />
               <input
                 type="search"
@@ -127,11 +127,11 @@ export default function InsightsPage() {
                 <Link
                   to={`/insights/${post.slug}`}
                   key={post.slug}
-                  className="group bg-[#0a0a0c] p-8 hover:bg-[#101013]"
+                  className="group bg-[#120d0a] p-8 hover:bg-[#1a120e]"
                   data-testid={`insight-card-${post.slug}`}
                 >
-                  <p className="font-mono text-[10px] uppercase tracking-widest text-blue-400">{post.category}</p>
-                  <h3 className="mt-4 font-display text-lg font-medium leading-snug text-white group-hover:text-blue-200">
+                  <p className="font-mono text-[10px] uppercase tracking-widest text-[#d4af37]">{post.category}</p>
+                  <h3 className="mt-4 font-display text-lg font-medium leading-snug text-white group-hover:text-[#f4c95d]">
                     {post.title}
                   </h3>
                   <p className="mt-3 line-clamp-3 text-sm leading-relaxed text-slate-400">{post.excerpt}</p>

@@ -58,7 +58,7 @@ export default function HomePage() {
         <div className="relative mx-auto max-w-7xl px-6 pb-32 pt-28 lg:px-12 lg:pt-40">
           <div className="max-w-3xl">
             <p className="text-mono-label" data-testid="hero-overline">
-              <span className="mr-3 inline-block h-1.5 w-1.5 bg-blue-500" /> iphysys // intelligence layer
+              <span className="mr-3 inline-block h-1.5 w-1.5 bg-[#b91c1c]" /> iphysys // intelligence layer
             </p>
             <h1 className="font-display mt-6 text-5xl font-medium leading-[1.02] tracking-tight md:text-6xl lg:text-7xl" data-testid="hero-headline">
               Intelligence for<br />Physical Systems.
@@ -77,7 +77,7 @@ export default function HomePage() {
               </Link>
               <Link
                 to="/insights"
-                className="inline-flex items-center gap-2 border border-white/10 px-5 py-3 text-sm font-mono uppercase tracking-[0.2em] text-slate-300 hover:border-white/30 hover:text-white"
+                className="inline-flex items-center gap-2 border border-[#d4af37]/40 px-5 py-3 text-sm font-mono uppercase tracking-[0.2em] text-[#d4af37] hover:border-[#d4af37] hover:text-[#f4c95d]"
                 data-testid="hero-cta-insights"
               >
                 Read Insights
@@ -141,7 +141,7 @@ export default function HomePage() {
             {CAPABILITIES.map(({ id, title, desc, icon: Icon }) => (
               <div
                 key={id}
-                className="group relative bg-[#0a0a0c] p-8 transition-colors hover:bg-[#101013]"
+                className="group relative bg-[#120d0a] p-8 transition-colors hover:bg-[#1a120e]"
                 data-testid={`capability-card-${id}`}
               >
                 <div className="absolute right-4 top-4">
@@ -149,7 +149,7 @@ export default function HomePage() {
                     RESEARCH & PROTOTYPING
                   </span>
                 </div>
-                <Icon size={20} strokeWidth={1.5} className="text-blue-400" />
+                <Icon size={20} strokeWidth={1.5} className="text-[#d4af37]" />
                 <p className="mt-6 font-mono text-xs text-slate-500">CAP-{String(id).padStart(2, "0")}</p>
                 <h3 className="mt-2 font-display text-xl font-medium text-white">{title}</h3>
                 <p className="mt-3 text-sm leading-relaxed text-slate-400">{desc}</p>
@@ -169,7 +169,7 @@ export default function HomePage() {
 
           <div className="mt-12 grid grid-cols-1 gap-px border border-white/10 bg-white/10 md:grid-cols-2 lg:grid-cols-3">
             {PRINCIPLES.map((p) => (
-              <div key={p.n} className="bg-[#0a0a0c] p-8" data-testid={`principle-${p.n}`}>
+              <div key={p.n} className="bg-[#120d0a] p-8" data-testid={`principle-${p.n}`}>
                 <p className="font-mono text-xs text-slate-500">{p.n}</p>
                 <h3 className="mt-3 font-display text-lg font-medium text-white">{p.title}</h3>
                 <p className="mt-2 text-sm leading-relaxed text-slate-400">{p.desc}</p>
@@ -189,8 +189,8 @@ export default function HomePage() {
 
           <div className="mt-12 grid gap-px border border-white/10 bg-white/10 md:grid-cols-3">
             {ROADMAP.map((phase, idx) => (
-              <div key={phase.phase} className="relative bg-[#0a0a0c] p-8" data-testid={`roadmap-phase-${idx + 1}`}>
-                <span className="absolute left-0 top-0 h-1 w-12 bg-blue-500" />
+              <div key={phase.phase} className="relative bg-[#120d0a] p-8" data-testid={`roadmap-phase-${idx + 1}`}>
+                <span className="absolute left-0 top-0 h-1 w-12 bg-[#b91c1c]" />
                 <p className="font-mono text-xs text-slate-500">{phase.phase}</p>
                 <h3 className="mt-2 font-display text-xl font-medium text-white">{phase.title}</h3>
                 <ul className="mt-6 space-y-2 text-sm text-slate-400">
@@ -222,17 +222,17 @@ export default function HomePage() {
 
           <div className="mt-12 grid gap-px border border-white/10 bg-white/10 md:grid-cols-3">
             {posts.length === 0 && (
-              <div className="bg-[#0a0a0c] p-8 text-sm text-slate-500" data-testid="insights-empty">Archive loading…</div>
+              <div className="bg-[#120d0a] p-8 text-sm text-slate-500" data-testid="insights-empty">Archive loading…</div>
             )}
             {posts.map((post) => (
               <Link
                 to={`/insights/${post.slug}`}
                 key={post.slug}
-                className="group bg-[#0a0a0c] p-8 hover:bg-[#101013]"
+                className="group bg-[#120d0a] p-8 hover:bg-[#1a120e]"
                 data-testid={`home-insight-${post.slug}`}
               >
-                <p className="font-mono text-[10px] uppercase tracking-widest text-blue-400">{post.category}</p>
-                <h3 className="mt-4 font-display text-lg font-medium text-white group-hover:text-blue-200">
+                <p className="font-mono text-[10px] uppercase tracking-widest text-[#d4af37]">{post.category}</p>
+                <h3 className="mt-4 font-display text-lg font-medium text-white group-hover:text-[#f4c95d]">
                   {post.title}
                 </h3>
                 <p className="mt-3 line-clamp-3 text-sm leading-relaxed text-slate-400">{post.excerpt}</p>
@@ -263,7 +263,7 @@ export default function HomePage() {
             <div className="flex items-center md:col-span-5 md:justify-end">
               <Link
                 to="/contact"
-                className="inline-flex items-center gap-3 border border-white/20 bg-white/5 px-6 py-4 text-sm font-mono uppercase tracking-[0.2em] text-white hover:border-white/40 hover:bg-white/10"
+                className="inline-flex items-center gap-3 border border-[#b91c1c] bg-[#b91c1c]/15 px-6 py-4 text-sm font-mono uppercase tracking-[0.2em] text-[#fde2c8] hover:border-[#dc2626] hover:bg-[#b91c1c]/25 glow-red"
                 data-testid="cta-start-conversation"
               >
                 Start a Conversation
