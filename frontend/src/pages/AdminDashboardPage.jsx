@@ -3,11 +3,13 @@ import { Navigate, useNavigate } from "react-router-dom";
 import { api, formatApiErrorDetail } from "@/lib/api";
 import { useAuth } from "@/context/AuthContext";
 import { toast } from "sonner";
-import { LogOut, FileText, Mail, Users, BarChart3, Plus, Trash2, Edit3, X } from "lucide-react";
+import { LogOut, FileText, Mail, Users, BarChart3, Plus, Trash2, Edit3, X, BookOpen } from "lucide-react";
+import AdminTextbookTab from "@/pages/admin/AdminTextbookTab";
 
 const TABS = [
   { key: "overview", label: "Overview", icon: BarChart3 },
   { key: "posts", label: "Posts", icon: FileText },
+  { key: "textbook", label: "Textbook", icon: BookOpen },
   { key: "newsletter", label: "Newsletter", icon: Users },
   { key: "contacts", label: "Contacts", icon: Mail },
 ];
@@ -83,6 +85,7 @@ export default function AdminDashboardPage() {
         <div className="mt-8">
           {tab === "overview" && <OverviewTab />}
           {tab === "posts" && <PostsTab />}
+          {tab === "textbook" && <AdminTextbookTab />}
           {tab === "newsletter" && <NewsletterTab />}
           {tab === "contacts" && <ContactsTab />}
         </div>
@@ -100,6 +103,8 @@ function OverviewTab() {
   const items = [
     { label: "Posts (total)", value: stats.posts_total },
     { label: "Published", value: stats.posts_published },
+    { label: "Textbook chapters", value: stats.textbook_chapters ?? 0 },
+    { label: "Textbook sections", value: stats.textbook_sections ?? 0 },
     { label: "Newsletter subs", value: stats.newsletter },
     { label: "Contact requests", value: stats.contacts },
     { label: "Unread contacts", value: stats.contacts_unread },

@@ -148,6 +148,21 @@ class PostIn(BaseModel):
     reading_time: Optional[int] = None
 
 
+class ChapterIn(BaseModel):
+    model_config = ConfigDict(extra="ignore")
+    label: str = Field(min_length=1, max_length=200)
+    key: Optional[str] = None
+    order: Optional[int] = None
+
+
+class SectionIn(BaseModel):
+    model_config = ConfigDict(extra="ignore")
+    label: str = Field(min_length=1, max_length=200)
+    key: Optional[str] = None
+    content: str = ""
+    order: Optional[int] = None
+
+
 # ---------------- Helpers ----------------
 def slugify(value: str) -> str:
     s = re.sub(r"[^a-zA-Z0-9\s-]", "", value.lower()).strip()
@@ -412,13 +427,180 @@ async def admin_stats(_: dict = Depends(require_admin)):
     subs = await db.newsletter.count_documents({})
     contacts = await db.contacts.count_documents({})
     unread = await db.contacts.count_documents({"read": False})
+    chapters = await db.textbook_chapters.count_documents({})
+    sections = await db.textbook_sections.count_documents({})
     return {
         "posts_total": posts_total,
         "posts_published": posts_published,
         "newsletter": subs,
         "contacts": contacts,
         "contacts_unread": unread,
+        "textbook_chapters": chapters,
+        "textbook_sections": sections,
     }
+
+
+# ---------------- Textbook (public) ----------------
+async def _build_toc():
+    chapters = await db.textbook_chapters.find({}, {"_id": 0}).sort("order", 1).to_list(length=500)
+    sections = await db.textbook_sections.find({}, {"_id": 0, "content": 0}).sort("order", 1).to_list(length=5000)
+    by_chapter: dict = {}
+    for s in sections:
+        by_chapter.setdefault(s["chapter_id"], []).append(s)
+    for c in chapters:
+        c["sections"] = sorted(by_chapter.get(c["id"], []), key=lambda x: x.get("order", 0))
+    return chapters
+
+
+@api_router.get("/textbook")
+async def textbook_toc():
+    return {"chapters": await _build_toc()}
+
+
+@api_router.get("/textbook/{chapter_key}")
+async def textbook_chapter(chapter_key: str):
+    chapter = await db.textbook_chapters.find_one({"key": chapter_key}, {"_id": 0})
+    if not chapter:
+        raise HTTPException(status_code=404, detail="Chapter not found")
+    sections = (
+        await db.textbook_sections.find({"chapter_id": chapter["id"]}, {"_id": 0, "content": 0})
+        .sort("order", 1)
+        .to_list(length=500)
+    )
+    chapter["sections"] = sections
+    return chapter
+
+
+@api_router.get("/textbook/{chapter_key}/{section_key}")
+async def textbook_section(chapter_key: str, section_key: str):
+    chapter = await db.textbook_chapters.find_one({"key": chapter_key}, {"_id": 0})
+    if not chapter:
+        raise HTTPException(status_code=404, detail="Chapter not found")
+    section = await db.textbook_sections.find_one(
+        {"chapter_id": chapter["id"], "key": section_key}, {"_id": 0}
+    )
+    if not section:
+        raise HTTPException(status_code=404, detail="Section not found")
+    return {"chapter": chapter, "section": section}
+
+
+# ---------------- Textbook (admin CRUD) ----------------
+async def _next_chapter_order() -> int:
+    last = await db.textbook_chapters.find_one({}, sort=[("order", -1)])
+    return (last["order"] + 1) if last else 0
+
+
+async def _next_section_order(chapter_id: str) -> int:
+    last = await db.textbook_sections.find_one(
+        {"chapter_id": chapter_id}, sort=[("order", -1)]
+    )
+    return (last["order"] + 1) if last else 0
+
+
+@api_router.get("/admin/textbook")
+async def admin_textbook_toc(_: dict = Depends(require_admin)):
+    return {"chapters": await _build_toc()}
+
+
+@api_router.post("/admin/textbook/chapters")
+async def admin_create_chapter(payload: ChapterIn, _: dict = Depends(require_admin)):
+    key = payload.key or slugify(payload.label)
+    if await db.textbook_chapters.find_one({"key": key}):
+        key = f"{key}-{str(uuid.uuid4())[:6]}"
+    order = payload.order if payload.order is not None else await _next_chapter_order()
+    doc = {
+        "id": str(uuid.uuid4()),
+        "key": key,
+        "label": payload.label,
+        "order": order,
+        "created_at": iso_now(),
+        "updated_at": iso_now(),
+    }
+    await db.textbook_chapters.insert_one(doc)
+    doc.pop("_id", None)
+    doc["sections"] = []
+    return doc
+
+
+@api_router.put("/admin/textbook/chapters/{chapter_id}")
+async def admin_update_chapter(chapter_id: str, payload: ChapterIn, _: dict = Depends(require_admin)):
+    existing = await db.textbook_chapters.find_one({"id": chapter_id})
+    if not existing:
+        raise HTTPException(status_code=404, detail="Chapter not found")
+    updates: dict = {"label": payload.label, "updated_at": iso_now()}
+    if payload.key and payload.key != existing.get("key"):
+        if await db.textbook_chapters.find_one({"key": payload.key, "id": {"$ne": chapter_id}}):
+            raise HTTPException(status_code=409, detail="Chapter key already in use")
+        updates["key"] = payload.key
+    if payload.order is not None:
+        updates["order"] = payload.order
+    await db.textbook_chapters.update_one({"id": chapter_id}, {"$set": updates})
+    doc = await db.textbook_chapters.find_one({"id": chapter_id}, {"_id": 0})
+    return doc
+
+
+@api_router.delete("/admin/textbook/chapters/{chapter_id}")
+async def admin_delete_chapter(chapter_id: str, _: dict = Depends(require_admin)):
+    res = await db.textbook_chapters.delete_one({"id": chapter_id})
+    if res.deleted_count == 0:
+        raise HTTPException(status_code=404, detail="Chapter not found")
+    await db.textbook_sections.delete_many({"chapter_id": chapter_id})
+    return {"status": "deleted"}
+
+
+@api_router.post("/admin/textbook/chapters/{chapter_id}/sections")
+async def admin_create_section(chapter_id: str, payload: SectionIn, _: dict = Depends(require_admin)):
+    chapter = await db.textbook_chapters.find_one({"id": chapter_id})
+    if not chapter:
+        raise HTTPException(status_code=404, detail="Chapter not found")
+    key = payload.key or slugify(payload.label)
+    if await db.textbook_sections.find_one({"chapter_id": chapter_id, "key": key}):
+        key = f"{key}-{str(uuid.uuid4())[:6]}"
+    order = payload.order if payload.order is not None else await _next_section_order(chapter_id)
+    doc = {
+        "id": str(uuid.uuid4()),
+        "chapter_id": chapter_id,
+        "key": key,
+        "label": payload.label,
+        "content": payload.content or "",
+        "order": order,
+        "created_at": iso_now(),
+        "updated_at": iso_now(),
+    }
+    await db.textbook_sections.insert_one(doc)
+    doc.pop("_id", None)
+    return doc
+
+
+@api_router.put("/admin/textbook/sections/{section_id}")
+async def admin_update_section(section_id: str, payload: SectionIn, _: dict = Depends(require_admin)):
+    existing = await db.textbook_sections.find_one({"id": section_id})
+    if not existing:
+        raise HTTPException(status_code=404, detail="Section not found")
+    updates: dict = {
+        "label": payload.label,
+        "content": payload.content or "",
+        "updated_at": iso_now(),
+    }
+    if payload.key and payload.key != existing.get("key"):
+        if await db.textbook_sections.find_one(
+            {"chapter_id": existing["chapter_id"], "key": payload.key, "id": {"$ne": section_id}}
+        ):
+            raise HTTPException(status_code=409, detail="Section key already in use within this chapter")
+        updates["key"] = payload.key
+    if payload.order is not None:
+        updates["order"] = payload.order
+    await db.textbook_sections.update_one({"id": section_id}, {"$set": updates})
+    doc = await db.textbook_sections.find_one({"id": section_id}, {"_id": 0})
+    return doc
+
+
+@api_router.delete("/admin/textbook/sections/{section_id}")
+async def admin_delete_section(section_id: str, _: dict = Depends(require_admin)):
+    res = await db.textbook_sections.delete_one({"id": section_id})
+    if res.deleted_count == 0:
+        raise HTTPException(status_code=404, detail="Section not found")
+    return {"status": "deleted"}
 
 
 # ---------------- Seed ----------------
@@ -461,6 +643,92 @@ def _seed_content(title: str, category: str) -> str:
     )
 
 
+# Initial textbook taxonomy. Seeded once if `textbook_chapters` is empty.
+SEED_TEXTBOOK = [
+    ("foundations", "Mathematics & Foundations", [
+        ("linear-algebra", "Linear Algebra"),
+        ("probability", "Probability & Statistics"),
+        ("calculus", "Calculus"),
+        ("information-theory", "Information Theory"),
+        ("optimization-basics", "Optimization Basics"),
+    ]),
+    ("data-science", "Data Science", [
+        ("data-wrangling", "Data Wrangling"),
+        ("eda", "Exploratory Analysis"),
+        ("feature-engineering", "Feature Engineering"),
+        ("data-pipelines", "Data Pipelines"),
+    ]),
+    ("machine-learning", "Machine Learning", [
+        ("supervised", "Supervised Learning"),
+        ("unsupervised", "Unsupervised Learning"),
+        ("model-evaluation", "Model Evaluation"),
+        ("regularization", "Regularization"),
+        ("ensembles", "Ensembles"),
+    ]),
+    ("deep-learning", "Deep Learning", [
+        ("neural-networks", "Neural Networks"),
+        ("backpropagation", "Backpropagation"),
+        ("cnn", "Convolutional Networks"),
+        ("rnn", "Recurrent Networks & LSTMs"),
+        ("transformers", "Transformers"),
+        ("diffusion", "Diffusion Models"),
+        ("generative", "Generative Models"),
+    ]),
+    ("computer-vision", "Computer Vision", [
+        ("image-classification", "Image Classification"),
+        ("object-detection", "Object Detection"),
+        ("segmentation", "Segmentation"),
+        ("3d-vision", "3D Vision"),
+        ("vision-language", "Vision-Language Models"),
+    ]),
+    ("nlp", "Natural Language Processing", [
+        ("embeddings", "Embeddings"),
+        ("sequence-models", "Sequence Models"),
+        ("llms", "Large Language Models"),
+        ("retrieval", "Retrieval & RAG"),
+    ]),
+    ("reinforcement-learning", "Reinforcement Learning", [
+        ("mdp", "Markov Decision Processes"),
+        ("q-learning", "Q-Learning"),
+        ("policy-gradients", "Policy Gradients"),
+        ("actor-critic", "Actor-Critic"),
+        ("multi-agent-rl", "Multi-Agent RL"),
+    ]),
+    ("physical-ai", "Physical AI", [
+        ("robotics-foundations", "Robotics Foundations"),
+        ("sensorimotor", "Sensorimotor Learning"),
+        ("world-models", "World Models"),
+        ("sim-to-real", "Sim-to-Real"),
+        ("manipulation", "Manipulation"),
+    ]),
+    ("multi-agent-systems", "Multi-Agent Systems", [
+        ("coordination", "Coordination"),
+        ("consensus", "Consensus Algorithms"),
+        ("game-theory", "Game Theory"),
+        ("swarms", "Swarm Intelligence"),
+    ]),
+    ("edge-ai", "Edge AI", [
+        ("quantization", "Quantization"),
+        ("pruning", "Pruning & Distillation"),
+        ("hardware-accel", "Hardware Accelerators"),
+        ("deployment", "Edge Deployment"),
+    ]),
+    ("trustworthy-ai", "Trustworthy AI", [
+        ("explainability", "Explainability"),
+        ("calibration", "Calibration"),
+        ("robustness", "Robustness"),
+        ("safety", "Safety & Alignment"),
+        ("fairness", "Fairness"),
+    ]),
+    ("systems", "ML Systems & MLOps", [
+        ("training-infra", "Training Infrastructure"),
+        ("serving", "Model Serving"),
+        ("monitoring", "Monitoring & Drift"),
+        ("versioning", "Data & Model Versioning"),
+    ]),
+]
+
+
 async def seed_data():
     # admin user
     admin_email = os.environ.get("ADMIN_EMAIL", "admin@iphysys.com").lower()
@@ -489,6 +757,10 @@ async def seed_data():
     await db.posts.create_index("category")
     await db.posts.create_index("published")
     await db.newsletter.create_index("email", unique=True)
+    await db.textbook_chapters.create_index("key", unique=True)
+    await db.textbook_chapters.create_index("order")
+    await db.textbook_sections.create_index([("chapter_id", 1), ("key", 1)], unique=True)
+    await db.textbook_sections.create_index("order")
 
     # posts
     if await db.posts.count_documents({}) == 0:
@@ -517,6 +789,34 @@ async def seed_data():
             )
         if docs:
             await db.posts.insert_many(docs)
+
+    # textbook chapters & sections
+    if await db.textbook_chapters.count_documents({}) == 0:
+        for ci, (ck, clabel, secs) in enumerate(SEED_TEXTBOOK):
+            chapter_id = str(uuid.uuid4())
+            await db.textbook_chapters.insert_one(
+                {
+                    "id": chapter_id,
+                    "key": ck,
+                    "label": clabel,
+                    "order": ci,
+                    "created_at": iso_now(),
+                    "updated_at": iso_now(),
+                }
+            )
+            for si, (sk, slabel) in enumerate(secs):
+                await db.textbook_sections.insert_one(
+                    {
+                        "id": str(uuid.uuid4()),
+                        "chapter_id": chapter_id,
+                        "key": sk,
+                        "label": slabel,
+                        "content": "",
+                        "order": si,
+                        "created_at": iso_now(),
+                        "updated_at": iso_now(),
+                    }
+                )
 
 
 # ---------------- App init ----------------

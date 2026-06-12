@@ -1,23 +1,56 @@
-import React, { useMemo, useState } from "react";
+import React, { useEffect, useMemo, useState } from "react";
 import { useSearchParams } from "react-router-dom";
 import { ChevronDown, ChevronRight, BookOpen, Search } from "lucide-react";
-import { TEXTBOOK_TOC } from "@/constants/textbookToc";
+import { api } from "@/lib/api";
 
 export default function AITextbookPage() {
   const [searchParams, setSearchParams] = useSearchParams();
-  const [chapterKey, setChapterKey] = useState(searchParams.get("chapter") || TEXTBOOK_TOC[0].key);
+  const [chapters, setChapters] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [chapterKey, setChapterKey] = useState(searchParams.get("chapter") || "");
   const [sectionKey, setSectionKey] = useState(searchParams.get("section") || "");
-  const [openChapters, setOpenChapters] = useState(() => ({ [chapterKey]: true }));
+  const [openChapters, setOpenChapters] = useState({});
   const [query, setQuery] = useState("");
+  const [sectionData, setSectionData] = useState(null);
+  const [sectionLoading, setSectionLoading] = useState(false);
+
+  // Load TOC
+  useEffect(() => {
+    setLoading(true);
+    api
+      .get("/textbook")
+      .then(({ data }) => {
+        const list = data.chapters || [];
+        setChapters(list);
+        if (list.length > 0) {
+          const initialChapter = chapterKey || list[0].key;
+          setChapterKey(initialChapter);
+          setOpenChapters((s) => ({ ...s, [initialChapter]: true }));
+        }
+      })
+      .finally(() => setLoading(false));
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
+  // Load section content when a section is selected
+  useEffect(() => {
+    if (!chapterKey || !sectionKey) {
+      setSectionData(null);
+      return;
+    }
+    setSectionLoading(true);
+    api
+      .get(`/textbook/${chapterKey}/${sectionKey}`)
+      .then(({ data }) => setSectionData(data))
+      .catch(() => setSectionData(null))
+      .finally(() => setSectionLoading(false));
+  }, [chapterKey, sectionKey]);
 
   const chapter = useMemo(
-    () => TEXTBOOK_TOC.find((c) => c.key === chapterKey) || TEXTBOOK_TOC[0],
-    [chapterKey]
+    () => chapters.find((c) => c.key === chapterKey) || chapters[0],
+    [chapters, chapterKey]
   );
-  const section = useMemo(
-    () => chapter.sections.find((s) => s.key === sectionKey),
-    [chapter, sectionKey]
-  );
+  const section = sectionData?.section;
 
   const toggleChapter = (key) =>
     setOpenChapters((s) => ({ ...s, [key]: !s[key] }));
@@ -37,17 +70,21 @@ export default function AITextbookPage() {
   };
 
   const filteredToc = useMemo(() => {
-    if (!query.trim()) return TEXTBOOK_TOC;
+    if (!query.trim()) return chapters;
     const q = query.trim().toLowerCase();
-    return TEXTBOOK_TOC.map((c) => {
-      const chMatches = c.label.toLowerCase().includes(q);
-      const sections = c.sections.filter((s) => s.label.toLowerCase().includes(q));
-      if (chMatches || sections.length > 0) {
-        return { ...c, sections: chMatches ? c.sections : sections };
-      }
-      return null;
-    }).filter(Boolean);
-  }, [query]);
+    return chapters
+      .map((c) => {
+        const chMatches = c.label.toLowerCase().includes(q);
+        const sections = (c.sections || []).filter((s) =>
+          s.label.toLowerCase().includes(q)
+        );
+        if (chMatches || sections.length > 0) {
+          return { ...c, sections: chMatches ? c.sections : sections };
+        }
+        return null;
+      })
+      .filter(Boolean);
+  }, [query, chapters]);
 
   return (
     <div data-testid="textbook-page">
@@ -58,8 +95,8 @@ export default function AITextbookPage() {
             A structured curriculum for intelligent physical systems.
           </h1>
           <p className="mt-6 max-w-2xl text-slate-400">
-            A living textbook organized by chapter. Content is added progressively — the
-            structure ships first so contributors can map material to a stable taxonomy.
+            A living textbook organized by chapter. Admins can author chapters, sections,
+            and content through the admin dashboard.
           </p>
         </div>
       </section>
@@ -84,7 +121,10 @@ export default function AITextbookPage() {
                   </div>
                 </div>
                 <nav className="max-h-[70vh] overflow-y-auto p-2" data-testid="textbook-toc-nav">
-                  {filteredToc.length === 0 && (
+                  {loading && (
+                    <p className="px-3 py-4 text-xs text-slate-500">Loading…</p>
+                  )}
+                  {!loading && filteredToc.length === 0 && (
                     <p className="px-3 py-4 text-xs text-slate-500">No matching chapters.</p>
                   )}
                   {filteredToc.map((c, idx) => {
@@ -120,7 +160,7 @@ export default function AITextbookPage() {
                         </button>
                         {isOpen && (
                           <div className="border-l border-[#3a2a20] bg-[#0f0a08] py-1 pl-3">
-                            {c.sections.map((s, sidx) => {
+                            {(c.sections || []).map((s, sidx) => {
                               const active = chapterKey === c.key && sectionKey === s.key;
                               return (
                                 <button
@@ -138,6 +178,9 @@ export default function AITextbookPage() {
                                 </button>
                               );
                             })}
+                            {(!c.sections || c.sections.length === 0) && (
+                              <p className="px-3 py-1.5 text-[11px] text-slate-600">No sections yet.</p>
+                            )}
                           </div>
                         )}
                       </div>
@@ -149,65 +192,79 @@ export default function AITextbookPage() {
 
             {/* MAIN */}
             <div className="lg:col-span-9" data-testid="textbook-main">
-              <div className="border border-[#3a2a20] bg-[#120d0a] p-8 lg:p-12">
-                <div className="flex flex-wrap items-center gap-3 font-mono text-[10px] uppercase tracking-[0.2em] text-slate-500">
-                  <BookOpen size={12} strokeWidth={1.5} className="text-[#d4af37]" />
-                  <span>Chapter</span>
-                  <span className="text-slate-400">{chapter.label}</span>
-                  {section && (
-                    <>
-                      <span>·</span>
-                      <span>Section</span>
-                      <span className="text-[#d4af37]">{section.label}</span>
-                    </>
+              {!chapter ? (
+                <div className="border border-[#3a2a20] bg-[#120d0a] p-12 text-center">
+                  <p className="font-mono text-xs uppercase tracking-[0.25em] text-slate-500">No chapters yet</p>
+                  <p className="mt-3 text-sm text-slate-400">
+                    Admin can author chapters via the admin dashboard.
+                  </p>
+                </div>
+              ) : (
+                <div className="border border-[#3a2a20] bg-[#120d0a] p-8 lg:p-12">
+                  <div className="flex flex-wrap items-center gap-3 font-mono text-[10px] uppercase tracking-[0.2em] text-slate-500">
+                    <BookOpen size={12} strokeWidth={1.5} className="text-[#d4af37]" />
+                    <span>Chapter</span>
+                    <span className="text-slate-400">{chapter.label}</span>
+                    {section && (
+                      <>
+                        <span>·</span>
+                        <span>Section</span>
+                        <span className="text-[#d4af37]">{section.label}</span>
+                      </>
+                    )}
+                  </div>
+
+                  <h2 className="font-display mt-6 text-3xl font-medium leading-tight text-white md:text-4xl">
+                    {section ? section.label : chapter.label}
+                  </h2>
+
+                  {sectionLoading && (
+                    <p className="mt-4 font-mono text-xs text-slate-500">Loading content…</p>
+                  )}
+
+                  {!sectionLoading && section && section.content && section.content.trim() ? (
+                    <div className="prose-iphysys mt-8 whitespace-pre-wrap" data-testid="textbook-content">
+                      {section.content}
+                    </div>
+                  ) : !sectionLoading && section ? (
+                    <div className="mt-8 border border-dashed border-[#3a2a20] bg-[#0a0706] p-8 text-center" data-testid="textbook-placeholder">
+                      <p className="font-mono text-xs uppercase tracking-[0.25em] text-[#d4af37]">
+                        Content placeholder
+                      </p>
+                      <p className="mt-3 text-sm text-slate-400">
+                        Study material has not been added for this section yet.
+                      </p>
+                    </div>
+                  ) : (
+                    <p className="mt-4 max-w-2xl text-sm leading-relaxed text-slate-400">
+                      Choose a section from the left to view material for this chapter.
+                    </p>
+                  )}
+
+                  {/* Sections list inside the chapter, for navigation */}
+                  {!section && (chapter.sections || []).length > 0 && (
+                    <div className="mt-10">
+                      <p className="text-mono-label">In this chapter</p>
+                      <ul className="mt-4 grid gap-px border border-[#3a2a20] bg-[#3a2a20] sm:grid-cols-2">
+                        {chapter.sections.map((s, i) => (
+                          <li key={s.key}>
+                            <button
+                              onClick={() => selectSection(chapter.key, s.key)}
+                              className="flex w-full items-center gap-3 bg-[#120d0a] px-4 py-3 text-left text-sm text-slate-300 hover:bg-[#1a120e] hover:text-white"
+                              data-testid={`chapter-section-link-${s.key}`}
+                            >
+                              <span className="font-mono text-[10px] text-slate-600">
+                                {String(i + 1).padStart(2, "0")}
+                              </span>
+                              {s.label}
+                            </button>
+                          </li>
+                        ))}
+                      </ul>
+                    </div>
                   )}
                 </div>
-
-                <h2 className="font-display mt-6 text-3xl font-medium leading-tight text-white md:text-4xl">
-                  {section ? section.label : chapter.label}
-                </h2>
-
-                <p className="mt-4 max-w-2xl text-sm leading-relaxed text-slate-400">
-                  {section
-                    ? `Material for "${section.label}" will appear here. This section is part of the "${chapter.label}" chapter of the iphysys AI textbook.`
-                    : `Choose a section from the left to begin. This chapter will host structured study material for "${chapter.label}".`}
-                </p>
-
-                <div className="mt-10 border border-dashed border-[#3a2a20] bg-[#0a0706] p-8 text-center" data-testid="textbook-placeholder">
-                  <p className="font-mono text-xs uppercase tracking-[0.25em] text-[#d4af37]">
-                    Content placeholder
-                  </p>
-                  <p className="mt-3 text-sm text-slate-400">
-                    Study material has not been added for this entry yet.
-                  </p>
-                  <p className="mt-1 text-xs text-slate-600">
-                    Structure first; content follows.
-                  </p>
-                </div>
-
-                {/* Sections list inside the chapter, for navigation */}
-                {!section && (
-                  <div className="mt-10">
-                    <p className="text-mono-label">In this chapter</p>
-                    <ul className="mt-4 grid gap-px border border-[#3a2a20] bg-[#3a2a20] sm:grid-cols-2">
-                      {chapter.sections.map((s, i) => (
-                        <li key={s.key}>
-                          <button
-                            onClick={() => selectSection(chapter.key, s.key)}
-                            className="flex w-full items-center gap-3 bg-[#120d0a] px-4 py-3 text-left text-sm text-slate-300 hover:bg-[#1a120e] hover:text-white"
-                            data-testid={`chapter-section-link-${s.key}`}
-                          >
-                            <span className="font-mono text-[10px] text-slate-600">
-                              {String(i + 1).padStart(2, "0")}
-                            </span>
-                            {s.label}
-                          </button>
-                        </li>
-                      ))}
-                    </ul>
-                  </div>
-                )}
-              </div>
+              )}
             </div>
           </div>
         </div>
