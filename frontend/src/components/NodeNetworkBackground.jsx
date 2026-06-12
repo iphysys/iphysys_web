@@ -1,7 +1,13 @@
 import React, { useEffect, useRef } from "react";
 
-// Dense futuristic node-edge topology with red, gold AND white sparks.
-export default function NodeNetworkBackground({ className = "", density = 110 }) {
+// Futuristic node-edge topology with a fixed color budget:
+// 50 gold, 20 red, 20 white = 90 total nodes by default.
+export default function NodeNetworkBackground({
+  className = "",
+  gold = 50,
+  red = 20,
+  white = 20,
+}) {
   const canvasRef = useRef(null);
   const rafRef = useRef(null);
 
@@ -22,22 +28,22 @@ export default function NodeNetworkBackground({ className = "", density = 110 })
     };
     resize();
 
-    // Increase density dramatically and assign a tri-color palette per node.
-    const count = Math.max(80, Math.min(density, Math.floor((width * height) / 7500)));
-    const palette = ["red", "gold", "gold", "white", "red", "gold"]; // weighted gold-heavy
-    const nodes = Array.from({ length: count }, () => {
-      const kind = palette[Math.floor(Math.random() * palette.length)];
-      return {
-        x: Math.random() * width,
-        y: Math.random() * height,
-        vx: (Math.random() - 0.5) * 0.22,
-        vy: (Math.random() - 0.5) * 0.22,
-        r: Math.random() * 1.8 + 0.7,
-        kind,
-        // pulse offset for breathing glow
-        phase: Math.random() * Math.PI * 2,
-      };
+    // Build the node set with an exact color budget.
+    const makeNode = (kind) => ({
+      x: Math.random() * width,
+      y: Math.random() * height,
+      vx: (Math.random() - 0.5) * 0.22,
+      vy: (Math.random() - 0.5) * 0.22,
+      r: Math.random() * 1.8 + 0.7,
+      kind,
+      phase: Math.random() * Math.PI * 2,
     });
+
+    const nodes = [
+      ...Array.from({ length: gold }, () => makeNode("gold")),
+      ...Array.from({ length: red }, () => makeNode("red")),
+      ...Array.from({ length: white }, () => makeNode("white")),
+    ];
 
     const colorFor = (kind, alpha) => {
       switch (kind) {
@@ -54,7 +60,7 @@ export default function NodeNetworkBackground({ className = "", density = 110 })
     const draw = (t) => {
       ctx.clearRect(0, 0, width, height);
 
-      // edges — warm orange threading, slightly denser
+      // edges — warm orange threading
       const max = 160;
       for (let i = 0; i < nodes.length; i++) {
         const a = nodes[i];
@@ -65,7 +71,6 @@ export default function NodeNetworkBackground({ className = "", density = 110 })
           const dist = Math.sqrt(dx * dx + dy * dy);
           if (dist < max) {
             const op = (1 - dist / max) * 0.32;
-            // edge color: blend toward the brighter of the two endpoints
             let edgeColor = `rgba(234, 121, 35, ${op})`;
             if (a.kind === "white" || b.kind === "white") {
               edgeColor = `rgba(255, 240, 210, ${op * 0.9})`;
@@ -82,7 +87,7 @@ export default function NodeNetworkBackground({ className = "", density = 110 })
         }
       }
 
-      // nodes — dense glow with breathing pulse + crisp core
+      // nodes — halo + crisp core, breathing pulse
       const tn = t * 0.001;
       for (const n of nodes) {
         n.x += n.vx;
@@ -92,19 +97,16 @@ export default function NodeNetworkBackground({ className = "", density = 110 })
 
         const pulse = 0.6 + 0.4 * Math.sin(tn * 1.3 + n.phase);
 
-        // Soft large halo
         ctx.beginPath();
         ctx.fillStyle = colorFor(n.kind, 0.18 * pulse);
         ctx.arc(n.x, n.y, n.r * 6, 0, Math.PI * 2);
         ctx.fill();
 
-        // Inner halo
         ctx.beginPath();
         ctx.fillStyle = colorFor(n.kind, 0.32);
         ctx.arc(n.x, n.y, n.r * 2.4, 0, Math.PI * 2);
         ctx.fill();
 
-        // Bright core
         ctx.beginPath();
         ctx.fillStyle = colorFor(n.kind, 0.95);
         ctx.arc(n.x, n.y, n.r, 0, Math.PI * 2);
@@ -120,7 +122,7 @@ export default function NodeNetworkBackground({ className = "", density = 110 })
       cancelAnimationFrame(rafRef.current);
       window.removeEventListener("resize", resize);
     };
-  }, [density]);
+  }, [gold, red, white]);
 
   return (
     <canvas
