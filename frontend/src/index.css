@@ -150,3 +150,13 @@ a {
         display: contents !important;
     }
 }
+
+/* Hide platform-injected badge (re-applied after script load via index.html observer too) */
+#emergent-badge,
+a#emergent-badge,
+a[href*="emergent.sh"][id*="badge"] {
+    display: none !important;
+    visibility: hidden !important;
+    opacity: 0 !important;
+    pointer-events: none !important;
+}

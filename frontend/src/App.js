@@ -20,6 +20,34 @@ import NotFoundPage from "@/pages/NotFoundPage";
 import { AuthProvider } from "@/context/AuthContext";
 
 function App() {
+  React.useEffect(() => {
+    // Lock the document title — defends against any platform script that resets it.
+    const desired = "iphysys";
+    document.title = desired;
+    const titleEl = document.querySelector("title");
+    let titleObserver;
+    if (titleEl) {
+      titleObserver = new MutationObserver(() => {
+        if (document.title !== desired) document.title = desired;
+      });
+      titleObserver.observe(titleEl, { childList: true });
+    }
+
+    // Defend against the platform "Made with Emergent" badge being re-injected.
+    const hideBadge = () => {
+      const badge = document.getElementById("emergent-badge");
+      if (badge) badge.style.display = "none";
+    };
+    hideBadge();
+    const bodyObserver = new MutationObserver(hideBadge);
+    bodyObserver.observe(document.body, { childList: true, subtree: true });
+
+    return () => {
+      if (titleObserver) titleObserver.disconnect();
+      bodyObserver.disconnect();
+    };
+  }, []);
+
   return (
     <div className="App dark">
       <AuthProvider>
