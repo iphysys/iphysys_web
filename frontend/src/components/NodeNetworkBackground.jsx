@@ -1,7 +1,7 @@
 import React, { useEffect, useRef } from "react";
 
 // Dense futuristic node-edge topology with red, gold AND white sparks.
-export default function NodeNetworkBackground({ className = "", density = 140 }) {
+export default function NodeNetworkBackground({ className = "", density = 110 }) {
   const canvasRef = useRef(null);
   const rafRef = useRef(null);
 

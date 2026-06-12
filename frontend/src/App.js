@@ -11,6 +11,7 @@ import InsightDetailPage from "@/pages/InsightDetailPage";
 import AboutPage from "@/pages/AboutPage";
 import ContactPage from "@/pages/ContactPage";
 import LegalPage from "@/pages/LegalPage";
+import AITextbookPage from "@/pages/AITextbookPage";
 import AdminLoginPage from "@/pages/AdminLoginPage";
 import AdminDashboardPage from "@/pages/AdminDashboardPage";
 import NotFoundPage from "@/pages/NotFoundPage";
@@ -26,6 +27,7 @@ function App() {
             <Route path="/vision" element={<Layout><VisionPage /></Layout>} />
             <Route path="/insights" element={<Layout><InsightsPage /></Layout>} />
             <Route path="/insights/:slug" element={<Layout><InsightDetailPage /></Layout>} />
+            <Route path="/textbook" element={<Layout><AITextbookPage /></Layout>} />
             <Route path="/about" element={<Layout><AboutPage /></Layout>} />
             <Route path="/contact" element={<Layout><ContactPage /></Layout>} />
             <Route path="/legal/:slug" element={<Layout><LegalPage /></Layout>} />
