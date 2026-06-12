@@ -338,7 +338,21 @@ async def me(user: dict = Depends(get_current_user)):
 # ---------------- Admin endpoints ----------------
 @api_router.get("/admin/posts")
 async def admin_list_posts(_: dict = Depends(require_admin)):
-    items = await db.posts.find({}, {"_id": 0}).sort("updated_at", -1).to_list(length=500)
+    projection = {
+        "_id": 0,
+        "id": 1,
+        "title": 1,
+        "slug": 1,
+        "category": 1,
+        "tags": 1,
+        "featured": 1,
+        "published": 1,
+        "reading_time": 1,
+        "excerpt": 1,
+        "updated_at": 1,
+        "published_at": 1,
+    }
+    items = await db.posts.find({}, projection).sort("updated_at", -1).to_list(length=200)
     return {"items": items}
 
 
@@ -403,9 +417,20 @@ async def admin_delete_newsletter(sub_id: str, _: dict = Depends(require_admin))
 
 
 @api_router.get("/admin/contacts")
-async def admin_list_contacts(_: dict = Depends(require_admin)):
-    items = await db.contacts.find({}, {"_id": 0}).sort("created_at", -1).to_list(length=2000)
-    return {"items": items, "total": len(items)}
+async def admin_list_contacts(
+    limit: int = Query(100, ge=1, le=500),
+    skip: int = Query(0, ge=0),
+    _: dict = Depends(require_admin),
+):
+    items = (
+        await db.contacts.find({}, {"_id": 0})
+        .sort("created_at", -1)
+        .skip(skip)
+        .limit(limit)
+        .to_list(length=limit)
+    )
+    total = await db.contacts.count_documents({})
+    return {"items": items, "total": total}
 
 
 @api_router.put("/admin/contacts/{cid}/read")
@@ -442,8 +467,18 @@ async def admin_stats(_: dict = Depends(require_admin)):
 
 # ---------------- Textbook (public) ----------------
 async def _build_toc():
-    chapters = await db.textbook_chapters.find({}, {"_id": 0}).sort("order", 1).to_list(length=500)
-    sections = await db.textbook_sections.find({}, {"_id": 0, "content": 0}).sort("order", 1).to_list(length=5000)
+    chapter_projection = {"_id": 0, "id": 1, "key": 1, "label": 1, "order": 1}
+    section_projection = {"_id": 0, "id": 1, "chapter_id": 1, "key": 1, "label": 1, "order": 1}
+    chapters = (
+        await db.textbook_chapters.find({}, chapter_projection)
+        .sort("order", 1)
+        .to_list(length=200)
+    )
+    sections = (
+        await db.textbook_sections.find({}, section_projection)
+        .sort("order", 1)
+        .to_list(length=1000)
+    )
     by_chapter: dict = {}
     for s in sections:
         by_chapter.setdefault(s["chapter_id"], []).append(s)
