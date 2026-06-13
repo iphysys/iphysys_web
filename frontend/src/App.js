@@ -1,5 +1,5 @@
 import React from "react";
-import { BrowserRouter, Routes, Route } from "react-router-dom";
+import { BrowserRouter, Routes, Route, useLocation } from "react-router-dom";
 import { Toaster } from "sonner";
 import "@/App.css";
 
@@ -18,22 +18,19 @@ import AdminLoginPage from "@/pages/AdminLoginPage";
 import AdminDashboardPage from "@/pages/AdminDashboardPage";
 import NotFoundPage from "@/pages/NotFoundPage";
 import { AuthProvider } from "@/context/AuthContext";
+import { applySeo } from "@/lib/seo";
+
+function RouteSeo() {
+  const location = useLocation();
+  React.useEffect(() => {
+    applySeo(location.pathname);
+  }, [location.pathname]);
+  return null;
+}
 
 function App() {
   React.useEffect(() => {
-    // Lock the document title — defends against any platform script that resets it.
-    const desired = "iphysys";
-    document.title = desired;
-    const titleEl = document.querySelector("title");
-    let titleObserver;
-    if (titleEl) {
-      titleObserver = new MutationObserver(() => {
-        if (document.title !== desired) document.title = desired;
-      });
-      titleObserver.observe(titleEl, { childList: true });
-    }
-
-    // Defend against the platform "Made with Emergent" badge being re-injected.
+    // Hide the platform-injected "Made with Emergent" badge if it appears.
     const hideBadge = () => {
       const badge = document.getElementById("emergent-badge");
       if (badge) badge.style.display = "none";
@@ -41,17 +38,14 @@ function App() {
     hideBadge();
     const bodyObserver = new MutationObserver(hideBadge);
     bodyObserver.observe(document.body, { childList: true, subtree: true });
-
-    return () => {
-      if (titleObserver) titleObserver.disconnect();
-      bodyObserver.disconnect();
-    };
+    return () => bodyObserver.disconnect();
   }, []);
 
   return (
     <div className="App dark">
       <AuthProvider>
         <BrowserRouter>
+          <RouteSeo />
           <Routes>
             <Route path="/" element={<Layout><HomePage /></Layout>} />
             <Route path="/vision" element={<Layout><VisionPage /></Layout>} />

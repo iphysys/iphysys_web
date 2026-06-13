@@ -3,117 +3,255 @@
     <head>
         <meta charset="utf-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1" />
-        <meta name="theme-color" content="#000000" />
-        <meta name="description" content="iphysys — Intelligence Layer for Physical Systems. Building the software intelligence stack for autonomous, distributed, and mission-aware systems." />
+        <meta name="theme-color" content="#0a0706" />
+
+        <!-- Primary SEO -->
+        <title>iPhySys — Intelligence Layer for Physical Systems</title>
+        <meta
+            name="description"
+            content="iPhySys builds the software intelligence stack for autonomous, distributed, and mission-aware physical systems. India-based deep tech AI startup."
+        />
+        <meta name="robots" content="index, follow" />
+        <meta name="googlebot" content="index, follow" />
+        <link rel="canonical" href="https://iphysys.com" />
+
+        <!-- Open Graph -->
+        <meta property="og:type" content="website" />
+        <meta property="og:site_name" content="iPhySys" />
+        <meta property="og:title" content="iPhySys — Intelligence Layer for Physical Systems" />
+        <meta property="og:description" content="Building AI software for autonomous and distributed physical systems." />
+        <meta property="og:url" content="https://iphysys.com" />
+
+        <!-- Twitter Card -->
+        <meta name="twitter:card" content="summary_large_image" />
+        <meta name="twitter:title" content="iPhySys — Intelligence Layer for Physical Systems" />
+        <meta name="twitter:description" content="Building AI software for autonomous and distributed physical systems." />
+
+        <!-- Structured data: Organization -->
+        <script type="application/ld+json">
+            {
+                "@context": "https://schema.org",
+                "@type": "Organization",
+                "name": "iPhySys",
+                "alternateName": "iphysys",
+                "url": "https://iphysys.com",
+                "description": "iPhySys builds the software intelligence stack for autonomous, distributed, and mission-aware physical systems. India-based deep tech AI startup.",
+                "foundingLocation": {
+                    "@type": "Country",
+                    "name": "India"
+                },
+                "sameAs": []
+            }
+        </script>
+
         <link rel="preconnect" href="https://fonts.googleapis.com" />
         <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
         <link href="https://fonts.googleapis.com/css2?family=Inter:wght@600&display=swap" rel="stylesheet" />
-        <!--
-        manifest.json provides metadata used when your web app is installed on a
-        user's mobile device or desktop. See https://developers.google.com/web/fundamentals/web-app-manifest/
-        -->
-        <!--
-        Notice the use of %PUBLIC_URL% in the tags above.
-        It will be replaced with the URL of the `public` folder during the build.
-        Only files inside the `public` folder can be referenced from the HTML.
 
-        Unlike "/favicon.ico" or "favicon.ico", "%PUBLIC_URL%/favicon.ico" will
-        work correctly both with client-side routing and a non-root public URL.
-        Learn how to configure a non-root public URL by running `npm run build`.
-        -->
-        <title>iphysys</title>
-        <script>window.addEventListener("error",function(e){if(e.error instanceof DOMException&&e.error.name==="DataCloneError"&&e.message&&e.message.includes("PerformanceServerTiming")){e.stopImmediatePropagation();e.preventDefault()}},true);</script>
+        <script>
+            window.addEventListener(
+                "error",
+                function (e) {
+                    if (
+                        e.error instanceof DOMException &&
+                        e.error.name === "DataCloneError" &&
+                        e.message &&
+                        e.message.includes("PerformanceServerTiming")
+                    ) {
+                        e.stopImmediatePropagation();
+                        e.preventDefault();
+                    }
+                },
+                true
+            );
+        </script>
         <script src="https://assets.emergent.sh/scripts/emergent-main.js"></script>
+
+        <style>
+            /* Pre-hydration SEO content styling — visible to crawlers AND briefly to real
+               users until React mounts. Matches the live HomePage hero so there's no
+               visual jump on first paint. */
+            html,
+            body {
+                background-color: #0a0706;
+                color: #f5ece1;
+                margin: 0;
+                font-family:
+                    "Inter",
+                    system-ui,
+                    -apple-system,
+                    BlinkMacSystemFont,
+                    sans-serif;
+            }
+            .seo-prerender {
+                max-width: 1200px;
+                margin: 0 auto;
+                padding: 96px 24px 24px;
+            }
+            .seo-prerender .seo-eyebrow {
+                color: #d4af37;
+                font-family: "JetBrains Mono", "Menlo", monospace;
+                font-size: 11px;
+                letter-spacing: 0.2em;
+                text-transform: uppercase;
+            }
+            .seo-prerender h1 {
+                font-family: "IBM Plex Sans", "Inter", sans-serif;
+                font-size: 56px;
+                line-height: 1.02;
+                letter-spacing: -0.02em;
+                margin: 24px 0 16px;
+                color: #ffffff;
+            }
+            .seo-prerender p {
+                color: #94a3b8;
+                font-size: 16px;
+                line-height: 1.6;
+                max-width: 640px;
+            }
+            .seo-prerender .seo-ctas {
+                margin-top: 32px;
+            }
+            .seo-prerender .seo-ctas a {
+                display: inline-block;
+                margin-right: 12px;
+                padding: 12px 20px;
+                color: #fde2c8;
+                border: 1px solid #b91c1c;
+                background: rgba(185, 28, 28, 0.15);
+                font-family: "JetBrains Mono", monospace;
+                font-size: 12px;
+                letter-spacing: 0.2em;
+                text-transform: uppercase;
+                text-decoration: none;
+            }
+            .seo-prerender .seo-ctas a + a {
+                border-color: rgba(212, 175, 55, 0.4);
+                background: transparent;
+                color: #d4af37;
+            }
+            .seo-prerender nav {
+                margin-bottom: 48px;
+                font-family: "JetBrains Mono", monospace;
+                font-size: 12px;
+                letter-spacing: 0.15em;
+                text-transform: uppercase;
+            }
+            .seo-prerender nav a {
+                margin-right: 20px;
+                color: #94a3b8;
+                text-decoration: none;
+            }
+            .seo-prerender section {
+                margin-top: 64px;
+                color: #cbd5e1;
+            }
+            .seo-prerender section h2 {
+                font-family: "IBM Plex Sans", "Inter", sans-serif;
+                font-size: 28px;
+                margin: 0 0 16px;
+                color: #ffffff;
+            }
+            .seo-prerender ul {
+                color: #94a3b8;
+                line-height: 1.7;
+            }
+        </style>
     </head>
     <body>
-        <noscript>You need to enable JavaScript to run this app.</noscript>
-        <div id="root"></div>
+        <noscript>
+            JavaScript is required for the interactive iphysys experience. Below is a
+            non-interactive summary of the page so its content remains accessible.
+        </noscript>
+
         <!--
-      This HTML file is a template.
-      If you open it directly in the browser, you will see an empty page.
+            #root is hydrated by React on load. Until then, the markup below is rendered
+            by the browser and served in the raw HTML response. This is what search-engine
+            crawlers and link-preview bots see when they request https://iphysys.com.
 
-      You can add webfonts, meta tags, or analytics to this file.
-      The build step will place the bundled scripts into the <body> tag.
+            React's createRoot().render() will replace this subtree with the live App once
+            the JS bundle parses, so end-users with JS enabled see the fully-styled site.
+        -->
+        <div id="root">
+            <div class="seo-prerender" data-prerender="seo">
+                <nav>
+                    <a href="/">Home</a>
+                    <a href="/vision">Vision</a>
+                    <a href="/insights">Insights</a>
+                    <a href="/textbook">Textbook</a>
+                    <a href="/about">About</a>
+                    <a href="/contact">Contact</a>
+                </nav>
 
-      To begin the development, run `npm start` or `yarn start`.
-      To create a production bundle, use `npm run build` or `yarn build`.
-    -->
-        <a
-            id="emergent-badge"
-            target="_blank"
-            href="https://app.emergent.sh/?utm_source=emergent-badge"
-            style="display: none !important;"
-        ></a>
-        <script>
-            !(function (t, e) {
-                var o, n, p, r;
-                e.__SV ||
-                    ((window.posthog = e),
-                    (e._i = []),
-                    (e.init = function (i, s, a) {
-                        function g(t, e) {
-                            var o = e.split(".");
-                            2 == o.length && ((t = t[o[0]]), (e = o[1])),
-                                (t[e] = function () {
-                                    t.push(
-                                        [e].concat(
-                                            Array.prototype.slice.call(
-                                                arguments,
-                                                0,
-                                            ),
-                                        ),
-                                    );
-                                });
-                        }
-                        ((p = t.createElement("script")).type =
-                            "text/javascript"),
-                            (p.crossOrigin = "anonymous"),
-                            (p.async = !0),
-                            (p.src =
-                                s.api_host.replace(
-                                    ".i.posthog.com",
-                                    "-assets.i.posthog.com",
-                                ) + "/static/array.js"),
-                            (r =
-                                t.getElementsByTagName(
-                                    "script",
-                                )[0]).parentNode.insertBefore(p, r);
-                        var u = e;
-                        for (
-                            void 0 !== a ? (u = e[a] = []) : (a = "posthog"),
-                                u.people = u.people || [],
-                                u.toString = function (t) {
-                                    var e = "posthog";
-                                    return (
-                                        "posthog" !== a && (e += "." + a),
-                                        t || (e += " (stub)"),
-                                        e
-                                    );
-                                },
-                                u.people.toString = function () {
-                                    return u.toString(1) + ".people (stub)";
-                                },
-                                o =
-                                    "init me ws ys ps bs capture je Di ks register register_once register_for_session unregister unregister_for_session Ps getFeatureFlag getFeatureFlagPayload isFeatureEnabled reloadFeatureFlags updateEarlyAccessFeatureEnrollment getEarlyAccessFeatures on onFeatureFlags onSurveysLoaded onSessionId getSurveys getActiveMatchingSurveys renderSurvey canRenderSurvey canRenderSurveyAsync identify setPersonProperties group resetGroups setPersonPropertiesForFlags resetPersonPropertiesForFlags setGroupPropertiesForFlags resetGroupPropertiesForFlags reset get_distinct_id getGroups get_session_id get_session_replay_url alias set_config startSessionRecording stopSessionRecording sessionRecordingStarted captureException loadToolbar get_property getSessionProperty Es $s createPersonProfile Is opt_in_capturing opt_out_capturing has_opted_in_capturing has_opted_out_capturing clear_opt_in_out_capturing Ss debug xs getPageViewId captureTraceFeedback captureTraceMetric".split(
-                                        " ",
-                                    ),
-                                n = 0;
-                            n < o.length;
-                            n++
-                        )
-                            g(u, o[n]);
-                        e._i.push([i, s, a]);
-                    }),
-                    (e.__SV = 1));
-            })(document, window.posthog || []);
-            posthog.init("phc_xAvL2Iq4tFmANRE7kzbKwaSqp1HJjN7x48s3vr0CMjs", {
-                api_host: "https://us.i.posthog.com",
-                person_profiles: "identified_only", // or 'always' to create profiles for anonymous users as well,
-                session_recording: {
-                    recordCrossOriginIframes: true,
-                    capturePerformance: false,
-                },
-            });
-        </script>
+                <p class="seo-eyebrow">iphysys // intelligence layer</p>
+                <h1>Intelligence for Physical Systems.</h1>
+                <p>
+                    iPhySys is building the software intelligence stack for autonomous,
+                    distributed, and mission-aware physical systems. India-based deep tech
+                    AI startup focused on the engineering problems behind intelligent
+                    machines that operate in the real world.
+                </p>
+
+                <div class="seo-ctas">
+                    <a href="/vision">Explore Vision</a>
+                    <a href="/insights">Read Insights</a>
+                    <a href="/contact">Contact Us</a>
+                </div>
+
+                <section>
+                    <h2>The shift</h2>
+                    <p>
+                        Physical systems are becoming intelligent. A new generation of
+                        robots, sensors, and infrastructure is shifting from procedural
+                        control to autonomous behavior. iPhySys is being built for that
+                        shift — treating autonomy, distributed decision making, edge
+                        intelligence, and trustworthy AI as first-class engineering
+                        problems.
+                    </p>
+                </section>
+
+                <section>
+                    <h2>Capability areas</h2>
+                    <ul>
+                        <li>Multi-Agent Intelligence — Coordination and reasoning across distributed autonomous agents.</li>
+                        <li>Edge AI — Deploying intelligence where the mission happens.</li>
+                        <li>Distributed Optimization — Planning and optimization under real-world constraints.</li>
+                        <li>Human-Machine Teaming — Decision support systems that augment operators.</li>
+                        <li>Engineering Intelligence — Transforming intent into trustworthy engineering artifacts.</li>
+                        <li>Trustworthy Autonomy — Confidence, risk awareness, and explainability for mission-critical systems.</li>
+                    </ul>
+                </section>
+
+                <section>
+                    <h2>Technology principles</h2>
+                    <ul>
+                        <li>Human-Centered Autonomy — Autonomy that augments human judgment, not replaces it.</li>
+                        <li>Intelligence at the Edge — Decisions belong where the physics lives.</li>
+                        <li>Distributed by Design — Systems composed of cooperating agents.</li>
+                        <li>Explainability Matters — Behavior that can be inspected, audited, and trusted.</li>
+                        <li>Mission Awareness — Software that understands intent and consequence.</li>
+                        <li>Engineering Rigor — Specification, verification, and operational reality, end to end.</li>
+                    </ul>
+                </section>
+
+                <section>
+                    <h2>Vision roadmap</h2>
+                    <ul>
+                        <li>Today — Research, knowledge development, algorithm exploration, prototype demonstrations.</li>
+                        <li>Emerging capabilities — Simulation environments, edge deployments, distributed coordination demonstrations.</li>
+                        <li>Future systems — Trusted autonomy, mission systems, large-scale intelligent physical systems.</li>
+                    </ul>
+                </section>
+
+                <section>
+                    <h2>Conversation</h2>
+                    <p>
+                        Building toward the future of autonomous systems. If your work
+                        touches autonomy, edge intelligence, or mission-grade software,
+                        contact us at hello@iphysys.com.
+                    </p>
+                </section>
+            </div>
+        </div>
     </body>
 </html>
